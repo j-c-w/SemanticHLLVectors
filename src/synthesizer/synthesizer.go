@@ -4,7 +4,7 @@ import (
 	"github.com/j-c-w/SemanticHLLVectors/src/io"
 )
 
-const MAXDEPTH = 3
+const MAXDEPTH = 5
 
 // This is a simple program synthesizer that takes 
 // a set of functions and tries to compose them.
