@@ -85,7 +85,7 @@ func (f IntFunction) Compose (g IntFunction) IntFunction {
 	return result
 }
 
-func (f IntFunction) toString() string {
+func (f IntFunction) ToString() string {
 	var builder strings.Builder
 
 	for i, fun := range f.functions {

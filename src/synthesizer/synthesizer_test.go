@@ -11,5 +11,5 @@ func TestGen(t *testing.T) {
 	outputs := [2] io.Values{io.Values{3, true}, io.Values{5, true}};
 
 	fun := Synthesize(inputs[:], outputs[:])
-	fmt.Println(fun.toString())
+	fmt.Println(fun.ToString())
 }
