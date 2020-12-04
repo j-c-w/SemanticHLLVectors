@@ -6,6 +6,7 @@ import (
 
 type Executable interface {
 	Execute(Values) Values
+	ExecuteAll([]Values) []Values
 }
 
 // Implementation of a program that may correspond e.g.
@@ -34,6 +35,15 @@ func (p Program) Execute(inputs Values) Values {
 	return valuesFromString(string(out))
 }
 
+func (e Program) ExecuteAll(values []Values) []Values {
+	outputs := make([]Values, len(values))
+	for i, value := range values {
+		outputs[i] = e.Execute(value)
+	}
+
+	return outputs
+}
+
 // Implementation of a native (i.e. go function) program.
 type NativeExecutable struct {
 	F func(int) int
@@ -44,4 +54,14 @@ func (n NativeExecutable) Execute(inputs Values) Values {
 	in := inputs.Value
 
 	return Values{n.F(in), true}
+}
+
+func (n NativeExecutable) ExecuteAll(values []Values) []Values {
+	outputs := make([]Values, len(values))
+
+	for i, value := range values {
+		outputs[i] = n.Execute(value)
+	}
+
+	return outputs
 }
