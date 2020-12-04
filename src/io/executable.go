@@ -36,12 +36,12 @@ func (p Program) Execute(inputs Values) Values {
 
 // Implementation of a native (i.e. go function) program.
 type NativeExecutable struct {
-	f func(int) int
+	F func(int) int
 }
 
 
 func (n NativeExecutable) Execute(inputs Values) Values {
 	in := inputs.Value
 
-	return Values{n.f(in), true}
+	return Values{n.F(in), true}
 }
