@@ -5,12 +5,12 @@ import (
 )
 
 type Values struct {
-	value int
-	valid bool
+	Value int
+	Valid bool
 }
 
 func (value Values) toString() string {
-	return strconv.Itoa(value.value)
+	return strconv.Itoa(value.Value)
 }
 
 func valuesFromString(str string) Values {
