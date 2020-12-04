@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"src/io"
+	"github.com/j-c-w/SemanticHLLVectors/src/io"
 )
 
 func main() {
