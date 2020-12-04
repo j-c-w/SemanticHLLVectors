@@ -47,6 +47,7 @@ func (e Program) ExecuteAll(values []Values) []Values {
 // Implementation of a native (i.e. go function) program.
 type NativeExecutable struct {
 	F func(int) int
+	Name string
 }
 
 
