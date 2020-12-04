@@ -1,4 +1,4 @@
-module synthesizer
+module github.com/j-c-w/SemanticHLLVectors/src/synthesizer
 
 go 1.14
 
