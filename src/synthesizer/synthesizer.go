@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-const MAXDEPTH = 32
+const MAXDEPTH = 3
 const DEBUG = false
 var Consts = []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
@@ -18,25 +18,21 @@ func Synthesize(inputs []io.Values, outputs []io.Values) Node {
 
 func IntSynthesize(inputs []io.Values, outputs []io.Values) Node {
 	// Try combinations of the functions
-	depth := 1
+	depth := MAXDEPTH
 
-	for depth < MAXDEPTH {
-		// Generate functions with 'depth' operators.
-		depthFunctions := make(chan Node)
-		go GenerateFunctionsWithDepth(depth, Consts, depthFunctions)
+	// Generate functions with 'depth' operators.
+	depthFunctions := make(chan Node)
+	go GenerateFunctionsWithDepth(depth, Consts, depthFunctions)
 
-		// Check if any of these functions satisfy the IO requirements
-		for function := range depthFunctions {
-			if DEBUG {
-				fmt.Println("Checking")
-				fmt.Println(function.ToString())
-			}
-			if IOCheck(function, inputs, outputs) {
-				return function
-			}
+	// Check if any of these functions satisfy the IO requirements
+	for function := range depthFunctions {
+		if DEBUG {
+			fmt.Println("Checking")
+			fmt.Println(function.ToString())
 		}
-
-		depth ++
+		if IOCheck(function, inputs, outputs) {
+			return function
+		}
 	}
 
 	// Failed to find a function.
@@ -56,14 +52,20 @@ func GenerateFunctionsWithDepth(depth int, consts []int, c chan Node) {
 	}
 
 	// For each depth, we add every operation:
+	smallerSubTrees := make(chan Node)
+	go GenerateFunctionsWithDepth(depth / 2, consts, smallerSubTrees)
+	// Repor tthe smple trees first
+	for tree := range smallerSubTrees {
+		c <- tree
+	}
+
+	// Need to recreate the subtrees
 	subTrees1 := make(chan Node)
 	go GenerateFunctionsWithDepth(depth / 2, consts, subTrees1)
 
 	// Now, add the parent trees with every combination
 	// of subtrees.
 	for subTree1 := range subTrees1 {
-		c <- subTree1
-
 		subTrees2 := make(chan Node)
 		go GenerateFunctionsWithDepth(depth / 2, consts, subTrees2)
 		for subTree2 := range subTrees2 {

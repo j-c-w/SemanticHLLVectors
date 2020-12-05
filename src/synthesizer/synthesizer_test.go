@@ -4,6 +4,7 @@ import (
 	"testing"
 	"github.com/j-c-w/SemanticHLLVectors/src/io"
 	"fmt"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGen(t *testing.T) {
@@ -20,4 +21,12 @@ func TestNext(t *testing.T) {
 
 	fun := Synthesize(inputs[:], outputs[:])
 	fmt.Println(fun.ToString())
+}
+
+func TestImpossible(t *testing.T) {
+	inputs := [2]io.Values{io.Values{1, true}, io.Values{1, true}}
+	outputs := [2]io.Values{io.Values{1, true}, io.Values{2, true}}
+
+	fun := Synthesize(inputs[:], outputs[:])
+	assert.Equal(t, fun, nil)
 }
