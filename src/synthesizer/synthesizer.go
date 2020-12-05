@@ -63,16 +63,6 @@ func GenerateFunctionsWithDepth(depth int, consts []int) []Node {
 		}
 	}
 
-	for i, r := range results {
-		if r == nil {
-			fmt.Println(len(subTrees))
-			fmt.Println(len(operators))
-			fmt.Println(i)
-			fmt.Println("FAILED")
-			panic("FAILED")
-		}
-	}
-
 	return results
 }
 
@@ -81,9 +71,6 @@ func IOCheck(f Node, inp []io.Values, out []io.Values) bool {
 		panic( "Expect input/output lengths to be equal")
 	}
 	for i := 0; i < len(inp); i ++ {
-		fmt.Println(inp[i])
-		fmt.Println(out[i])
-		fmt.Println(i)
 		if f.Evaluate(inp[i].Value) != out[i].Value {
 			return false
 		}
