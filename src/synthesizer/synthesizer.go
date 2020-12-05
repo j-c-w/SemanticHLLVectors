@@ -2,7 +2,6 @@ package synthesizer
 
 import (
 	"github.com/j-c-w/SemanticHLLVectors/src/io"
-	"fmt"
 )
 
 const MAXDEPTH = 5
