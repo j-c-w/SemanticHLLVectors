@@ -31,7 +31,15 @@ func (b BinaryNode) Evaluate(x int) int {
 	switch b.op {
 	case "+": return b.child1.Evaluate(x) + b.child2.Evaluate(x)
 	case "*": return b.child1.Evaluate(x) * b.child2.Evaluate(x)
-	case "/": return b.child1.Evaluate(x) / b.child2.Evaluate(x)
+	case "/":  {
+		c2Value := b.child2.Evaluate(x)
+		if c2Value != 0 {
+			return b.child1.Evaluate(x) / c2Value
+		} else {
+			// Uhm. Clearly a bit of a hack.
+			return b.child1.Evaluate(x)
+		}
+	}
 	case "-": return b.child1.Evaluate(x) - b.child2.Evaluate(x)
 	default: panic("Unknwon operator")
 	}
