@@ -2,17 +2,25 @@ package synthesizer
 
 import "strconv"
 
-var operators = []string {"+", "/", "-", "*"};
+var binaryOperators = []string {"+", "/", "-", "*"};
+var unaryOperators = []string {"thresh"};
 
 type Node interface {
 	ToString() string
 	Evaluate(int) int
+	IsSimplifiable() bool
+	IsConst() bool
 }
 
 type BinaryNode struct {
 	op string
 	child1 Node
 	child2 Node
+}
+
+type UnaryNode struct {
+	op string
+	child Node
 }
 
 type IntChild struct {
@@ -45,6 +53,52 @@ func (b BinaryNode) Evaluate(x int) int {
 	}
 }
 
+func (c IntChild) IsSimplifiable() bool {
+	return false
+}
+
+func (v VariableChild) IsSimplifiable() bool {
+	return false
+}
+
+func (u UnaryNode) IsSimplifiable() bool {
+	return u.child.IsConst()
+}
+
+func (b BinaryNode) IsSimplifiable() bool {
+	return b.child1.IsConst() && b.child2.IsConst()
+}
+
+func (c IntChild) IsConst() bool {
+	return true
+}
+
+func (v VariableChild) IsConst() bool {
+	return false
+}
+
+func (u UnaryNode) IsConst() bool {
+	return true
+}
+
+func (b BinaryNode) IsConst() bool {
+	return false
+}
+
+func (u UnaryNode) Evaluate(x int) int {
+	switch u.op {
+	case "thresh": {
+		child := u.child.Evaluate(x)
+		if child > 0 {
+			return child
+		} else {
+			return 0
+		}
+	}
+	default: panic("Unknown operator")
+	}
+}
+
 func (v VariableChild) Evaluate(x int) int {
 	return x
 }
@@ -59,4 +113,8 @@ func (n IntChild) ToString() string {
 
 func (v VariableChild) ToString() string {
 	return v.name
+}
+
+func (u UnaryNode) ToString() string {
+	return "(" + u.op + " " + u.child.ToString() + ")"
 }

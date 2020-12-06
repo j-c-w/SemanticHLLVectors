@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-const MAXDEPTH = 3
+const MAXDEPTH = 4
 const DEBUG = false
 var Consts = []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
@@ -69,8 +69,19 @@ func GenerateFunctionsWithDepth(depth int, consts []int, c chan Node) {
 		subTrees2 := make(chan Node)
 		go GenerateFunctionsWithDepth(depth / 2, consts, subTrees2)
 		for subTree2 := range subTrees2 {
-			for _, op := range operators {
-				c <- BinaryNode{op, subTree1, subTree2}
+			for _, op := range binaryOperators {
+				nextNode := BinaryNode{op, subTree1, subTree2}
+				if !nextNode.IsSimplifiable() {
+					c <- nextNode
+				}
+			}
+		}
+
+		// Also do the unary operators.
+		for _, op := range unaryOperators {
+			nextNode := UnaryNode{op, subTree1}
+			if !nextNode.IsSimplifiable() {
+				c <- nextNode
 			}
 		}
 	}
